@@ -4,6 +4,7 @@ import moment from 'moment'
 import 'moment/locale/pt-br'
 import todayImage from '../../assets/imgs/today.jpg'
 import commonStyles from '../commonStyles'
+import Task from '../components/Task'
 
 export default class Schedule extends Component {
 
@@ -17,9 +18,8 @@ export default class Schedule extends Component {
                     </View>
                 </ImageBackground>
                 <View style={styles.taskContainer}>
-                    <Text>Tarefa 1</Text>
-                    <Text>Tarefa 2</Text>
-                    <Text>Tarefa 3</Text>
+                   <Task desc='teste 1' estimateAt={new Date()} doneAt={null}/>
+                   <Task desc='teste 2' estimateAt={new Date()} doneAt={new Date()}/>
                 </View>
             </View>
         )
@@ -53,6 +53,5 @@ const styles = StyleSheet.create({
     },
     taskContainer: {
         flex: 7,
-        
     }
 })
