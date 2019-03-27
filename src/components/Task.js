@@ -1,21 +1,27 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import commonStyles from '../commonStyles'
 
 export default props => {
-    let check = null;
+    let check = null
     if(props.doneAt !== null){
-        check = ( <View style={styles.done}> <Icon name='check' size={20} color={commonStyles.colors.secondary} /> </View> )
+        check = ( 
+            <View style={styles.done}> 
+                <Icon name='check' size={20} color={commonStyles.colors.secondary} />
+            </View>
+        )
     } else {
         check = <View style={styles.pending} />
     }
     const descStyle = props.doneAt !== null ? { textDecorationLine: 'line-through'} : {}
     return (
         <View style={styles.container}>
-            <View style={styles.checkContainer}>{check}</View>
+            <TouchableWithoutFeedback onPress={() => props.toggleTask(props.id)}>
+                <View style={styles.checkContainer}>{check}</View>
+            </TouchableWithoutFeedback>
             <View>
                 <Text style={[styles.description, descStyle]}>{props.desc}</Text>
                 <Text style={styles.date}>{moment(props.estimateAt).locale('pt-br').format('ddd, D [de] MMMM')}</Text>
@@ -47,7 +53,7 @@ const styles = StyleSheet.create({
         height: 25,
         width: 25,
         borderRadius: 15,
-        borderColor: '#4D7031',
+        backgroundColor: '#4D7031',
         alignItems: 'center',
         justifyContent: 'center'
     },
