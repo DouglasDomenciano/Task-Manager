@@ -6,7 +6,7 @@ import commonStyles from '../commonStyles'
 const initialState = { desc: '', date: new Date() }
 
 export default class AddTask extends Component{
-    state = { initialState }
+    state = { ...initialState }
     save = () => {
         if(!this.state.desc.trim()){
             Alert.alert('Invalid values', 'Please input description for the task!')
@@ -49,13 +49,13 @@ export default class AddTask extends Component{
                 </TouchableWithoutFeedback>
                 <View style={styles.container}>
                     <Text style={styles.header}>New Task</Text>
-                    <TextInput placeholder='Description...' style={styles.input} onChange={desc => this.setState({ desc })} value={this.state.desc} />
+                    <TextInput placeholder='Description...' style={styles.input} onChangeText={desc => this.setState({ desc })} value={this.state.desc} />
                     {datePicker}
-                    <View styles={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                         <TouchableOpacity onPress={this.props.onCancel}>
                             <Text style={styles.button}>Cancel</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.save}>
+                        <TouchableOpacity onPress={this.save}>
                             <Text style={styles.button}>Save</Text>
                         </TouchableOpacity>
                     </View>

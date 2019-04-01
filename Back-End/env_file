@@ -1,0 +1,4 @@
+// Rename file to (.env) and put your authSecret token
+module.exports = {
+    authSecret: 'yourtoken'
+}
