@@ -22,36 +22,50 @@ export default class Auth extends Component {
         password: '',
         confirmPassword: '',
     }
-
-    signinOrSignup = async () => {
+    signin = async () => {
+        try {
+            const res = await axios.post(`${server}/signin`, {
+                email: this.state.email,
+                password: this.state.password,
+            })
+            axios.defaults.headers.common['Authorization'] = `bearer ${res.data.token}`
+            this.props.navigation.navigate('Home')
+        } catch (error) {
+            Alert.alert('Huuuummm', 'You are not allowed to do this! =O')
+        }
+    }
+    signup = async () => {
+        try {
+            await axios.post(`${server}/signup`, {
+                name: this.state.name,
+                email: this.state.email,
+                password: this.state.password,
+                confirmPassword: this.state.confirmPassword
+            })
+            Alert.alert('Yesss', 'You are in! =)')
+            this.setState({ stageNew: false})
+        } catch (error) {
+            showError(error)
+        }
+    }
+    signinOrSignup =  () => {
         if (this.state.stageNew) {
-            try {
-                await axios.post(`${server}/signup`, {
-                    name: this.state.name,
-                    email: this.state.email,
-                    password: this.state.password,
-                    confirmPassword: this.state.confirmPassword
-                })
-                Alert.alert('Yesss', 'You are in! =)')
-                this.setState({ stageNew: false})
-            } catch (error) {
-                showError(error)
-            }
+            this.signup()
         } else {
-            try {
-                const res = await axios.post(`${server}/signin`, {
-                    email: this.state.email,
-                    password: this.state.password,
-                })
-                axios.defaults.headers.common['Authorization'] = `bearer ${res.data.token}`
-                this.props.navigation.navigate('Home')
-            } catch (error) {
-                Alert.alert('Huuuummm', 'You are not allowed to do this! =O')
-            }
+            this.signin()
         }
     }
 
     render() {
+        let isValid = []
+        isValid.push(this.state.email && this.state.email.includes('@')) 
+        isValid.push(this.state.password && this.state.password.length >= 3) 
+        if(this.state.stageNew){ 
+            isValid.push(this.state.name && this.state.name.trim())
+            isValid.push(!!this.state.password) 
+            isValid.push(this.state.password === this.state.confirmPassword) 
+        }
+        isValid = isValid.reduce((check, value) => check && value)
         return (
             <ImageBackground source={backgroundImage} 
                 style={styles.background}>
@@ -62,8 +76,8 @@ export default class Auth extends Component {
                     <AuthInput icon='at' placeholder='E-mail' style={styles.input} value={this.state.email} onChangeText={email =>  this.setState({ email })} />
                     <AuthInput icon='lock' secureTextEntry={true} placeholder='Password'style={styles.input}value={this.state.password}onChangeText={password => this.setState({ password })} />
                     {this.state.stageNew && <AuthInput icon='asterisk' secureTextEntry={true} placeholder='Confirm Password' style={styles.input} value={this.state.confirmPassword} onChangeText={confirmPassword =>  this.setState({ confirmPassword })} />}
-                    <TouchableOpacity onPress={this.signinOrSignup}>
-                        <View style={styles.button}>
+                    <TouchableOpacity disabled={!isValid} onPress={this.signinOrSignup}>
+                        <View style={[styles.button, !isValid ? {backgroundColor: '#AAA'} : {}]}>
                             <Text style={styles.buttonText}> {this.state.stageNew ? 'Register' : 'Signin'}</Text>
                         </View>
                     </TouchableOpacity>
