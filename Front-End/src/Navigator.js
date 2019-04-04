@@ -2,7 +2,9 @@ import React from 'react'
 import { createSwitchNavigator, createDrawerNavigator ,createAppContainer } from 'react-navigation'
 import Schedule from './screens/Schedule'
 import Auth from './screens/Auth'
-import commonStyles from './commonStyles';
+import AuthOrApp from './screens/AuthOrApp'
+import commonStyles from './commonStyles'
+import Menu from './screens/Menu'
 
 const MenuRoutes = {
     Today: {
@@ -37,6 +39,7 @@ const MenuRoutes = {
 
 const MenuConfig = {
     initialRouteName: 'Today',
+    contentComponent: Menu,
     contentOptions: {
         labelStyle: {
             fontFamily: commonStyles.fontFamily,
@@ -53,6 +56,10 @@ const MenuConfig = {
 const menuNavigator = createDrawerNavigator(MenuRoutes, MenuConfig)
 
 const MainRoutes = {
+    Loading: {
+        name: 'Loading',
+        screen: AuthOrApp
+    },
     Auth: {
         name: 'Auth',
         screen: Auth
@@ -62,7 +69,7 @@ const MainRoutes = {
         screen: menuNavigator
     }
 }
-const MainNavigator = createSwitchNavigator(MainRoutes, { initialRouteName: 'Auth'})
+const MainNavigator = createSwitchNavigator(MainRoutes, { initialRouteName: 'Loading'})
 const Navigator = createAppContainer(MainNavigator)
 
 export default Navigator
